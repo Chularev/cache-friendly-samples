@@ -1,6 +1,7 @@
 #include <memory>
 #include <random>
 #include <queue>
+#include <utility>
 
 typedef uint32_t (*timer_cb)(void*);
 struct timer_data {

@@ -1,0 +1,7 @@
+1) linked_list
+1) linked_array
+3) bsearch_array
+4) map
+5) heap_aux
+6) bheap_aux
+

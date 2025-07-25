@@ -1,0 +1,4 @@
+valgrid --tool=callgrind --cachr-sim=yes --dump-instr=yes --branch-sim=yes {programm}
+perf stat -e cycles,instructions,l1d-loads,l1d-load-misses {programm}
+perf record -e cycles,instructions,l1d-loads,l1d-load-misses --call-graph=lbr {programm}
+perf report --no-children
