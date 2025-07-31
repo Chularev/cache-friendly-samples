@@ -1,12 +1,11 @@
-#ifndef SIMPLE_LINEAR_ARRAY_H
-#define SIMPLE_LINEAR_ARRAY_H
-
+#ifndef MOVE_BACKWARD_LINEAR_ARRAY_H
+#define MOVE_BACKWARD_LINEAR_ARRAY_H
 #include "common.h"
 
-class simple_linear_array
+class move_backward_linear_array
 {
 public:
-    simple_linear_array() = default;
+    move_backward_linear_array() = default;
 
     std::vector<struct timer_data> timeouts;
     uint32_t next_id = 0;
@@ -18,14 +17,25 @@ public:
 
     uint32_t schedule_timer(uint32_t deadline, timer_cb cb, void* userp)
     {
-        auto idx = timeouts.size();
-        timeouts.push_back({});
-        while (idx > 0 && is_after(timeouts[idx-1].deadline, deadline)) {
-            timeouts[idx] = std::move(timeouts[idx-1]);
-            --idx;
+        // Find insertion position first
+        auto insertion_pos = timeouts.size();
+        while (insertion_pos > 0 && is_after(timeouts[insertion_pos-1].deadline, deadline)) {
+            --insertion_pos;
         }
-        timeouts[idx] = timer_data{deadline, next_id++, userp, cb };
-        return next_id;
+
+        // Add space for new element
+        timeouts.push_back({});
+
+        // Move elements if needed
+        if (insertion_pos < timeouts.size() - 1) {
+            std::move_backward(timeouts.begin() + insertion_pos,
+                               timeouts.end() - 1,  // Correct range to move
+                               timeouts.end());
+        }
+
+        // Insert new element
+        timeouts[insertion_pos] = timer_data{deadline, next_id++};
+        return next_id - 1;
     }
 
     void cancel_timer(uint32_t t)
@@ -63,4 +73,4 @@ public:
 
 };
 
-#endif // SIMPLE_LINEAR_ARRAY_H
+#endif // MOVE_BACKWARD_LINEAR_ARRAY_H
