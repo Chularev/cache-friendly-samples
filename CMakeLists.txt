@@ -6,9 +6,9 @@ add_compile_options(-O0)
 
 add_executable(linked_list linked_list.cpp)
 add_executable(linear_array linear_array.cpp)
-add_executable(my_linear_array my_linear_array.cpp)
-add_executable(my_linear_array2 my_linear_array2.cpp)
 add_executable(bsearch_array bsearch_array.cpp)
 add_executable(map map.cpp)
 add_executable(heap_aux heap_aux.cpp)
 add_executable(bheap_aux bheap_aux.cpp)
+
+add_subdirectory(arrays)
