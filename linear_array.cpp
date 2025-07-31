@@ -11,7 +11,6 @@ struct timer_data {
   timer_cb callback;
 };
 
-typedef uint32_t timer;
 
 static std::vector<struct timer_data> timeouts;
 static uint32_t next_id = 0;
@@ -21,7 +20,7 @@ static bool is_after(uint32_t lh, uint32_t rh)
   return lh < rh;
 }
 
-timer schedule_timer(uint32_t deadline, timer_cb cb, void* userp)
+uint32_t schedule_timer(uint32_t deadline, timer_cb cb, void* userp)
 {
   auto idx = timeouts.size();
   timeouts.push_back({});
@@ -33,7 +32,7 @@ timer schedule_timer(uint32_t deadline, timer_cb cb, void* userp)
   return next_id;
 }
 
-void cancel_timer(timer t)
+void cancel_timer(uint32_t t)
 {
   auto i = std::find_if(timeouts.begin(), timeouts.end(),
                         [t](const auto& e) { return e.id == t; });
@@ -55,9 +54,9 @@ int main()
   std::uniform_int_distribution<uint32_t> dist;
 
   for (int k = 0; k < 10; ++k) {
-    timer prev{};
+    uint32_t prev{};
     for (int i = 0; i < 20'000; ++i) {
-      timer t = schedule_timer(dist(gen), [](void*){return 0U;}, nullptr);
+      uint32_t t = schedule_timer(dist(gen), [](void*){return 0U;}, nullptr);
       if (i & 1) cancel_timer(prev);
       prev = t;
     }
