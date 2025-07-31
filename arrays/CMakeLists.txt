@@ -9,7 +9,7 @@ add_library(lib_linear_array STATIC
 )
 target_include_directories(lib_linear_array PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(base_linear_array base_linear_array.cpp)
+add_executable(base_linear_array base_linear_array_main.cpp)
 target_link_libraries(base_linear_array lib_linear_array)
 
 add_executable(my_linear_array my_linear_array.cpp)
