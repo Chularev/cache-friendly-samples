@@ -36,15 +36,14 @@ uint32_t schedule_timer(uint32_t deadline)
 
 uint32_t schedule_timer2(uint32_t deadline)
 {
+    // Find insertion position first
+    auto insertion_pos = timeouts2.size();
+    while (insertion_pos > 0 && is_after(timeouts2[insertion_pos-1].deadline, deadline)) {
+        --insertion_pos;
+    }
 
     // Add space for new element
     timeouts2.push_back({});
-
-    // Find insertion position first
-    auto insertion_pos = timeouts2.end();
-    while (insertion_pos != timeouts2.begin() && is_after(insertion_pos->deadline, deadline)) {
-        --insertion_pos;
-    }
 
     // Move elements if needed
     if (insertion_pos < timeouts2.size() - 1) {
@@ -54,7 +53,7 @@ uint32_t schedule_timer2(uint32_t deadline)
     }
 
     // Insert new element
-    timeouts2[insertion_pos] = timer_data{deadline, next_id - 1};
+    timeouts2[insertion_pos] = timer_data{deadline, next_id++};
     return next_id - 1;
 }
 void cancel_timer(uint32_t t)

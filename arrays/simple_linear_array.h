@@ -17,7 +17,7 @@ struct timer_data {
 class simple_linear_array
 {
 public:
-    simple_linear_array();
+    simple_linear_array() = default;
 
     std::vector<struct timer_data> timeouts;
     uint32_t next_id = 0;
