@@ -7,8 +7,6 @@ typedef uint32_t (*timer_cb)(void*);
 struct timer_data {
     uint32_t deadline;
     uint32_t id;
-    void* userp;
-    timer_cb callback;
 };
 
 bool operator==(const timer_data t1, const timer_data t2)
@@ -24,7 +22,7 @@ static bool is_after(uint32_t lh, uint32_t rh)
     return lh < rh;
 }
 
-uint32_t schedule_timer(uint32_t deadline, timer_cb cb, void* userp)
+uint32_t schedule_timer(uint32_t deadline)
 {
     auto idx = timeouts.size();
     timeouts.push_back({});
@@ -32,20 +30,31 @@ uint32_t schedule_timer(uint32_t deadline, timer_cb cb, void* userp)
         timeouts[idx] = std::move(timeouts[idx-1]);
         --idx;
     }
-    timeouts[idx] = timer_data{deadline, next_id++, userp, cb };
+    timeouts[idx] = timer_data{deadline, next_id++};
     return next_id;
 }
 
-uint32_t schedule_timer2(uint32_t deadline, timer_cb cb, void* userp)
+uint32_t schedule_timer2(uint32_t deadline)
 {
-    auto idx = timeouts2.size();
-    timeouts2.push_back({});
-    while (idx > 0 && is_after(timeouts2[idx-1].deadline, deadline)) {
-        timeouts2[idx] = std::move(timeouts2[idx-1]);
-        --idx;
+    // Find insertion position first
+    auto insertion_pos = timeouts2.size();
+    while (insertion_pos > 0 && is_after(timeouts2[insertion_pos-1].deadline, deadline)) {
+        --insertion_pos;
     }
-    timeouts2[idx] = timer_data{deadline, next_id - 1, userp, cb };
-    return next_id;
+
+    // Add space for new element
+    timeouts2.push_back({});
+
+    // Move elements if needed
+    if (insertion_pos < timeouts2.size() - 1) {
+        std::move_backward(timeouts2.begin() + insertion_pos,
+                           timeouts2.end() - 1,  // Correct range to move
+                           timeouts2.end());
+    }
+
+    // Insert new element
+    timeouts2[insertion_pos] = timer_data{deadline, next_id - 1};
+    return next_id - 1;
 }
 void cancel_timer(uint32_t t)
 {
@@ -61,12 +70,10 @@ void cancel_timer(uint32_t t)
 bool shoot_first()
 {
     if (timeouts.empty()) return false;
-    timeouts.front().callback(timeouts.front().userp);
     timeouts.erase(timeouts.begin());
 
 
     if (timeouts2.empty()) return false;
-    timeouts2.front().callback(timeouts2.front().userp);
     timeouts2.erase(timeouts2.begin());
     return true;
 }
@@ -81,8 +88,8 @@ int main()
         uint32_t prev{};
         for (int i = 0; i < 20'000; ++i) {
             auto d = dist(gen);
-            uint32_t t = schedule_timer(d, [](void*){return 0U;}, nullptr);
-            schedule_timer2(d, [](void*){return 0U;}, nullptr);
+            uint32_t t = schedule_timer(d);
+            schedule_timer2(d);
             if (i & 1) cancel_timer(prev);
             prev = t;
         }
