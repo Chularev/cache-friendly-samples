@@ -7,7 +7,7 @@ add_compile_options(-O0)
 add_library(lib_linear_array STATIC
     simple_linear_array.h simple_linear_array.cpp
 )
-target_include_directories(linear_array PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(lib_linear_array PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(test_linear_array linear_array.cpp)
 target_link_libraries(test_linear_array lib_linear_array)

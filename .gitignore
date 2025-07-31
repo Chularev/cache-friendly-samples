@@ -1,3 +1,4 @@
 build/*
 my_build/*
 CMakeLists.txt.user
+arrays/build/*
