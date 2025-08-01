@@ -3,10 +3,8 @@
 #include "simple_linear_array.h"
 #include "move_backward_linear_array.h"
 
-void loop()
-{
+#include "assert.h"
 
-}
 int main()
 {
     simple_linear_array sla{};
@@ -17,13 +15,12 @@ int main()
     std::uniform_int_distribution<uint32_t> dist;
 
     for (int k = 0; k < 10; ++k) {
-        uint32_t prev{};
         for (int i = 0; i < 20'000; ++i) {
             auto id = dist(gen);
-            uint32_t t = sla.schedule_timer(id, [](void*){return 0U;}, nullptr);
-            if (i & 1) sla.cancel_timer(prev);
-            prev = t;
+            sla.loop(id,i);
+            mla.loop(id,i);
         }
     }
+    assert(mla.timeouts == sla.timeouts);
     return 0;
 }

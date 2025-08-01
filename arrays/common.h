@@ -25,6 +25,7 @@ public:
 
     std::vector<struct timer_data> timeouts;
     uint32_t next_id = 0;
+    uint32_t prev{};
 
     bool is_after(uint32_t lh, uint32_t rh)
     {
@@ -48,9 +49,16 @@ public:
         return true;
     }
 
-    void loop ()
+    void loop (uint32_t id, int i)
     {
+        uint32_t t = schedule_timer(id, [](void*){return 0U;}, nullptr);
+        if (i & 1) cancel_timer(prev);
+        prev = t;
     }
 
 };
+bool operator==(const timer_data& a1, const timer_data& a2)
+{
+    return a1.deadline == a2.deadline && a1.id == a2.id;
+}
 #endif // COMMON_H
