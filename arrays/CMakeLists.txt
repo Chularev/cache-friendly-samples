@@ -19,3 +19,5 @@ target_link_libraries(move_backward_linear_array lib_linear_array)
 
 add_executable(test_linear_array test_linear_array.cpp)
 target_link_libraries(test_linear_array lib_linear_array)
+
+include(PerfProfiling.cmake)
