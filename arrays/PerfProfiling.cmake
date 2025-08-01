@@ -7,14 +7,12 @@ set(PERF_STAT_EVENTS
     branch-misses
     CACHE STRING "perf stat events to measure"
 )
+string(REPLACE ";" "," perf_events "${PERF_STAT_EVENTS}")
 
 function(add_perf_stat target)
     add_custom_target(perf_stat_${target}
-        COMMAND sudo perf stat -e ${PERF_STAT_EVENTS} $<TARGET_FILE:${target}>
+        COMMAND sudo perf stat -e ${perf_events} $<TARGET_FILE:${target}>
         COMMENT "Profiling ${target} with perf stat"
         DEPENDS ${target}
     )
 endfunction()
-
-add_perf_stat(simple_linear_array)
-add_perf_stat(move_backward_linear_array)

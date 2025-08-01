@@ -11,13 +11,19 @@ add_library(lib_linear_array STATIC
 )
 target_include_directories(lib_linear_array PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+include(PerfProfiling.cmake)
+
 add_executable(simple_linear_array simple_linear_array_main.cpp)
 target_link_libraries(simple_linear_array lib_linear_array)
+add_perf_stat(simple_linear_array)
 
 add_executable(move_backward_linear_array move_backward_linear_array_main.cpp)
 target_link_libraries(move_backward_linear_array lib_linear_array)
+add_perf_stat(move_backward_linear_array)
 
 add_executable(test_linear_array test_linear_array.cpp)
 target_link_libraries(test_linear_array lib_linear_array)
 
-include(PerfProfiling.cmake)
+
+
+
