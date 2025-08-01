@@ -24,8 +24,8 @@ public:
         }
 
         // Insert new element
-        timeouts[insertion_pos] = timer_data{deadline, next_id++};
-        return next_id - 1;
+        timeouts[insertion_pos] = timer_data{deadline, next_id++, userp, cb};
+        return next_id;
     }
 
 

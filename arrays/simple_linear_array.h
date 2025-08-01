@@ -6,8 +6,6 @@
 class simple_linear_array : public common_array
 {
 public:
-    simple_linear_array() = default;
-
     uint32_t schedule_timer(uint32_t deadline, timer_cb cb, void* userp)
     {
         auto idx = timeouts.size();
