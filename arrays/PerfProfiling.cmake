@@ -16,3 +16,15 @@ function(add_perf_stat target)
         DEPENDS ${target}
     )
 endfunction()
+
+function(add_perf_record target)
+    add_custom_target(perf_report_${target}
+        COMMAND sudo perf record -e ${perf_events} $<TARGET_FILE:${target}>
+        COMMENT "Profiling ${target} with perf stat"
+        DEPENDS ${target}
+    )
+endfunction()
+
+add_custom_target(perf_report
+    COMMAND sudo perf report --no-children
+)
