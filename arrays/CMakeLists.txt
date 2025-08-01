@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(cache_friendly)
+project(my_linear_array)
 set(CMAKE_CXX_STANDARD 20)
 
 add_compile_options(-O0)
@@ -15,5 +15,5 @@ add_executable(base_linear_array base_linear_array_main.cpp)
 target_link_libraries(base_linear_array lib_linear_array)
 
 add_executable(my_linear_array move_backward_linear_array_main.cpp)
-add_executable(my_linear_array2 my_linear_array2.cpp)
+add_executable(my_linear_array2 test_linear_array.cpp)
 
