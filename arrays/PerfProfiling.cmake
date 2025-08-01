@@ -18,7 +18,7 @@ function(add_perf_stat target)
 endfunction()
 
 function(add_perf_record target)
-    add_custom_target(perf_report_${target}
+    add_custom_target(perf_record_${target}
         COMMAND sudo perf record -e ${perf_events} $<TARGET_FILE:${target}>
         COMMENT "Profiling ${target} with perf stat"
         DEPENDS ${target}
