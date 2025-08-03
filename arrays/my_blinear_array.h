@@ -21,25 +21,16 @@ struct timer
 };
 
 
-class my_blinear_array
-{
-public:
-    my_blinear_array() = default;
-    virtual ~my_blinear_array()
-    {
-        while (shoot_first());
-    }
 
-    std::vector<struct timer_data> timeouts;
-    uint32_t next_id = 0;
-    timer prev{};
+    static std::vector<struct timer_data> timeouts;
+    static   uint32_t next_id = 0;
 
     static bool is_after(const timer_data& lh, const timer_data& rh)
     {
-        return lh.deadline >= rh.deadline;
+        return lh.deadline < rh.deadline;
     }
 
-    constexpr timer schedule_timer(uint32_t deadline, timer_cb cb, void* userp)
+    timer schedule_timer(uint32_t deadline, timer_cb cb, void* userp)
     {
         timer_data element{deadline, next_id, userp, cb};
         auto i = std::lower_bound(timeouts.begin(), timeouts.end(),
@@ -48,7 +39,7 @@ public:
         return {deadline, next_id++};
     }
 
-    constexpr void cancel_timer(timer t)
+    void cancel_timer(timer t)
     {
         timer_data element{t.deadline, t.id, nullptr, nullptr};
         auto [lo, hi] = std::equal_range(timeouts.begin(), timeouts.end(),
@@ -69,16 +60,4 @@ public:
         return true;
     }
 
-    void loop (uint32_t id, int i)
-    {
-        timer t = schedule_timer(id, [](void*){return 0U;}, nullptr);
-        if (i & 1) cancel_timer(prev);
-        prev = t;
-    }
-
-};
-bool operator==(const timer_data& a1, const timer_data& a2)
-{
-    return a1.deadline == a2.deadline && a1.id == a2.id;
-}
 #endif // MY_BLINEAR_ARRAY_H
