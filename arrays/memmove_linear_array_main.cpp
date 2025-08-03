@@ -1,10 +1,10 @@
 
-#include "memmove_linear_array.h"
+#include "my_blinear_array.h"
 
 
 int main()
 {
-    memmove_backward_linear_array sla{};
+    my_blinear_array sla{};
 
     std::random_device rd;
     std::mt19937 gen(rd());

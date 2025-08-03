@@ -1,13 +1,13 @@
 #include <random>
 
 
-#include "memmove_linear_array.h"
+#include "my_blinear_array.h"
 
 #include "assert.h"
 
 int main()
 {
-    memmove_backward_linear_array mma{};
+    my_blinear_array mma{};
 
     std::random_device rd;
     std::mt19937 gen(rd());

@@ -1,10 +1,8 @@
-#ifndef MEMMOVE_LINEAR_ARRAY_H
-#define MEMMOVE_LINEAR_ARRAY_H
+#ifndef MY_BLINEAR_ARRAY_H
+#define MY_BLINEAR_ARRAY_H
 #include "common.h"
-#include <stdio.h>
-#include <string.h>
 
-class memmove_backward_linear_array : public common_array
+class my_blinear_array : public common_array
 {
 public:
     static bool is_after(const timer_data& lh, const timer_data& rh)
@@ -24,4 +22,4 @@ public:
 
 };
 
-#endif // MEMMOVE_LINEAR_ARRAY_H
+#endif // MY_BLINEAR_ARRAY_H

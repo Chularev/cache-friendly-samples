@@ -7,7 +7,7 @@ add_compile_options(-O0)
 add_library(lib_linear_array STATIC
     common.h
     empty.cpp
-    memmove_linear_array.h
+    my_blinear_array.h
 )
 target_include_directories(lib_linear_array PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
