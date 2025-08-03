@@ -25,6 +25,11 @@ function(add_perf_record target)
     )
 endfunction()
 
+function(perf_profile target)
+    add_perf_stat(${target})
+    add_perf_record(${target})
+endfunction()
+
 add_custom_target(perf_report
     COMMAND sudo perf report --no-children
 )
