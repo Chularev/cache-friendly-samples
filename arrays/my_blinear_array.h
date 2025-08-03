@@ -39,7 +39,7 @@ public:
         return lh.deadline >= rh.deadline;
     }
 
-    timer schedule_timer(uint32_t deadline, timer_cb cb, void* userp)
+    constexpr timer schedule_timer(uint32_t deadline, timer_cb cb, void* userp)
     {
         timer_data element{deadline, next_id, userp, cb};
         auto i = std::lower_bound(timeouts.begin(), timeouts.end(),
@@ -48,7 +48,7 @@ public:
         return {deadline, next_id++};
     }
 
-    void cancel_timer(timer t)
+    constexpr void cancel_timer(timer t)
     {
         timer_data element{t.deadline, t.id, nullptr, nullptr};
         auto [lo, hi] = std::equal_range(timeouts.begin(), timeouts.end(),

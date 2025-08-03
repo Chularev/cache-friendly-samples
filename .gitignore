@@ -1,5 +1,5 @@
+*/build/*
+*/my_build/*
 build/*
 my_build/*
-CMakeLists.txt.user
-arrays/build/*
-barrays/build/*
+*/CMakeLists.txt.user
