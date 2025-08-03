@@ -7,32 +7,17 @@
 class memmove_backward_linear_array : public common_array
 {
 public:
+    static bool is_after(const timer_data& lh, const timer_data& rh)
+    {
+        return lh.deadline >= rh.deadline;
+    }
+
     uint32_t schedule_timer(uint32_t deadline, timer_cb cb, void* userp) {
-        // First ensure we have room
-        timeouts.push_back({});
-
-        // Find insertion point
-        size_t idx = timeouts.size() - 1;
-        while (idx > 0 && is_after(timeouts[idx-1].deadline, deadline)) {
-            --idx;
-        }
-
-        // Only use memmove if we actually need to shift elements
-        if (idx < timeouts.size() - 1) {
-            // Calculate byte counts
-            size_t elements_to_move = timeouts.size() - idx - 1;
-            size_t bytes_to_move = elements_to_move * sizeof(timer_data);
-
-            // Safe memmove usage
-            memmove(
-                &timeouts[idx+1],  // destination
-                &timeouts[idx],    // source
-                bytes_to_move      // byte count
-                );
-        }
-
+        timer_data element{deadline, next_id++, userp, cb};
+        auto it = std::lower_bound(timeouts.begin(), timeouts.end(),
+                                   element, is_after);
         // Insert new element
-        timeouts[idx] = timer_data{deadline, next_id++, userp, cb};
+        timeouts.insert(it, std::move(element));
         return next_id;
     }
 
