@@ -22,5 +22,3 @@ perf_profile(heap_aux)
 
 add_executable(bheap_aux bheap_aux.cpp)
 perf_profile(bheap_aux)
-
-add_subdirectory(arrays)
