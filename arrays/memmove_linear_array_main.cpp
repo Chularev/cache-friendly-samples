@@ -16,6 +16,6 @@ int main()
             if (i & 1) cancel_timer(prev);
             prev = t;
         }
+        while (shoot_first());
     }
-    while (shoot_first());
 }
