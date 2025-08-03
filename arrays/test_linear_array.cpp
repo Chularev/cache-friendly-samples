@@ -1,8 +1,5 @@
 #include <random>
-
-
 #include "my_blinear_array.h"
-
 #include "assert.h"
 
 int main()
