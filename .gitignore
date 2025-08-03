@@ -2,5 +2,4 @@ build/*
 my_build/*
 CMakeLists.txt.user
 arrays/build/*
-arrays/my_build/*
-arrays/build/*
+barrays/build/*
