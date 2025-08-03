@@ -12,22 +12,23 @@ public:
         // First ensure we have room
         timeouts.push_back({});
 
-        // Find insertion point in [begin, end-1] range
-        auto it = std::lower_bound(
+        // Find insertion point that exactly matches linear search behavior
+        auto it = std::upper_bound(
             timeouts.begin(),
-            timeouts.end() - 1,  // Key difference: exclude new empty slot
+            timeouts.end() - 1,
             deadline,
-            [](const timer_data& a, uint32_t val) {
-                return a.deadline > val;
+            [](uint32_t val, const timer_data& a) {  // Note: reversed arguments
+                return val >= a.deadline;  // Equivalent to original condition
             }
             );
         size_t idx = it - timeouts.begin();
 
-        // Rest remains the same
+        // Only shift if needed
         if (idx < timeouts.size() - 1) {
-            size_t bytes_to_move = (timeouts.size() - idx - 1) * sizeof(timer_data);
-            memmove(&timeouts[idx+1], &timeouts[idx], bytes_to_move);
+            size_t bytes = (timeouts.size() - idx - 1) * sizeof(timer_data);
+            memmove(&timeouts[idx+1], &timeouts[idx], bytes);
         }
+
         timeouts[idx] = timer_data{deadline, next_id++, userp, cb};
         return next_id;
     }
