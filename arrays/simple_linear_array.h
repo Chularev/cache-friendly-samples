@@ -8,28 +8,29 @@
 class simple_linear_array : public common_array
 {
 public:
+    static bool is_after(const timer_data& lh, const timer_data& rh)
+    {
+        return lh.deadline >= rh.deadline;
+    }
+
     uint32_t schedule_timer(uint32_t deadline, timer_cb cb, void* userp) {
-        // First ensure we have room
+        timer_data element{deadline, next_id++, userp, cb};
+        auto it = std::lower_bound(timeouts.begin(), timeouts.end(),
+                                  element, is_after);
+
+        size_t insertion_pos = it - timeouts.begin();
+
         timeouts.push_back({});
 
-        // Find insertion point that exactly matches linear search behavior
-        auto it = std::upper_bound(
-            timeouts.begin(),
-            timeouts.end() - 1,
-            deadline,
-            [](uint32_t val, const timer_data& a) {  // Note: reversed arguments
-                return val >= a.deadline;  // Equivalent to original condition
-            }
-            );
-        size_t idx = it - timeouts.begin();
-
-        // Only shift if needed
-        if (idx < timeouts.size() - 1) {
-            size_t bytes = (timeouts.size() - idx - 1) * sizeof(timer_data);
-            memmove(&timeouts[idx+1], &timeouts[idx], bytes);
+        // Move elements if needed
+        if (insertion_pos < timeouts.size() - 1) {
+            std::move_backward(timeouts.begin() + insertion_pos,
+                               timeouts.end() - 1,  // Correct range to move
+                               timeouts.end());
         }
 
-        timeouts[idx] = timer_data{deadline, next_id++, userp, cb};
+        // Insert new element
+        timeouts[insertion_pos] = std::move(element);
         return next_id;
     }
 };
